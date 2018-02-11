@@ -15,21 +15,32 @@ defmodule DataBackup.Server do
     GenServer.call(__MODULE__, {:insert_data, id, data})
   end
 
+  def get_data(id) do
+    GenServer.call(__MODULE__, {:get_data, id})
+  end
+
   #############
   # Callbacks #
   #############
 
   def init(_) do
     unless DataBackup.Backup.restore do
-      :ets.new(@ets_name, [:set, :private, :named_table])
+      :ets.new(@ets_name, [:set, :protected, :named_table])
     end
-    {:ok, ets: @ets_name}
+    {:ok, %{ets: @ets_name}}
   end
 
   def handle_call({:insert_data, id, data}, _from, state) do
-    # IO.inspect state.ets
-    # :ets.insert(state.ets, {id, data})
+    :ets.insert(state.ets, {id, data})
     {:reply, :ok, state}
+  end
+
+  def handle_call({:get_data, id}, _from, state) do
+    record =
+      state.ets
+      |> :ets.lookup(id)
+      |> List.first
+    {:reply, record, state}
   end
 
   # Does nothing on ETS transfer

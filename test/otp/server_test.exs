@@ -32,18 +32,27 @@ defmodule DataBackup.ServerTest do
   end
 
   describe "insert_data/2" do
-    # setup :start_all_servers
+    setup :start_all_servers
 
-    # test "inserts data correctly" do
-    #   assert :ok == Server.insert_data(12, %{name: "John Smith"})
-    #   assert :ets.lookup(@ets_name, 12) == [{12, %{name: "John Smith"}}]
-    # end
+    test "inserts data correctly" do
+      assert :ok == Server.insert_data(12, %{name: "John Smith"})
+      assert :ets.lookup(@ets_name, 12) == [{12, %{name: "John Smith"}}]
+    end
 
-    # test "overwrites data if id is the same" do
-    #   Server.insert_data(12, %{name: "John Smith"})
-    #   Server.insert_data(12, %{name: "Jane Smith"})
-    #   assert :ets.lookup(@ets_name, 12) == [{12, %{name: "Jane Smith"}}]
-    # end
+    test "overwrites data if id is the same" do
+      Server.insert_data(12, %{name: "John Smith"})
+      Server.insert_data(12, %{name: "Jane Smith"})
+      assert :ets.lookup(@ets_name, 12) == [{12, %{name: "Jane Smith"}}]
+    end
+  end
+
+  describe "get_data/1" do
+    setup :start_all_servers_and_seed
+
+    test "returns correct value" do
+      assert Server.get_data(1) == {1, "data for 1"}
+      assert Server.get_data(3) == {3, "data for 3"}
+    end
   end
 
   ###################
@@ -67,7 +76,7 @@ defmodule DataBackup.ServerTest do
     start_all_servers(nil)
 
     Enum.each(1..10, fn i ->
-      :ets.insert(@ets_name, {i, "data for #{i}"})
+      Server.insert_data(i, "data for #{i}")
     end)
   end
 end
