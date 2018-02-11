@@ -1,21 +1,3 @@
 # DataBackup
 
-**TODO: Add description**
-
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `data_backup` to your list of dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [
-    {:data_backup, "~> 0.1.0"}
-  ]
-end
-```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/data_backup](https://hexdocs.pm/data_backup).
-
+A hastily thrown together app to test the [`heir`](http://erlang.org/doc/man/ets.html#new-2) functionality to preserve data within an ets table when it's owner process exits. 
