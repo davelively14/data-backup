@@ -20,19 +20,19 @@ defmodule DataBackup.BackupTest do
     setup :start_server_make_ets
 
     test "returns nil if no backup data" do
-      refute Backup.restore
+      refute Backup.restore()
     end
 
     test "returns table name if backup exists", %{ets: ets} do
       transfer_ets(ets)
-      assert ets == Backup.restore
+      assert ets == Backup.restore()
     end
 
     test "regains control of ets on restore", %{ets: ets} do
       assert Keyword.get(:ets.info(ets), :owner) == self()
       transfer_ets(ets)
       refute Keyword.get(:ets.info(ets), :owner) == self()
-      Backup.restore
+      Backup.restore()
       assert Keyword.get(:ets.info(ets), :owner) == self()
     end
   end
