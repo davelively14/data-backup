@@ -17,6 +17,10 @@ defmodule DataBackup.Server do
     GenServer.call(__MODULE__, {:get_data, id})
   end
 
+  def get_state do
+    GenServer.call(__MODULE__, :get_state)
+  end
+
   #############
   # Callbacks #
   #############
@@ -36,6 +40,10 @@ defmodule DataBackup.Server do
       |> :ets.lookup(id)
       |> List.first
     {:reply, record, state}
+  end
+
+  def handle_call(:get_state, _from, state) do
+    {:reply, state, state}
   end
 
   # Does nothing on ETS transfer
