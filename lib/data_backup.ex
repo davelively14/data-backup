@@ -4,15 +4,15 @@ defmodule DataBackup do
   """
 
   @doc """
-  Hello world.
+  Starts our OTP system
 
   ## Examples
 
-      iex> DataBackup.hello
-      :world
+      iex> DataBackup.start
+      nil
 
   """
-  def hello do
-    :world
+  def start do
+    nil
   end
 end

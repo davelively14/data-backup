@@ -43,7 +43,6 @@ defmodule DataBackup.BackupTest do
     test "triggers handle_info for ETS-TRANSFER", %{ets: ets, backup_pid: backup_pid} do
       :ets.give_away(ets, backup_pid, nil)
       state = Backup.get_state()
-      assert state.origin == self()
       assert state.table_name == :data
     end
   end

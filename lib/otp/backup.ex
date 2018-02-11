@@ -25,13 +25,13 @@ defmodule DataBackup.Backup do
     {:ok, nil}
   end
 
-  def handle_info({:"ETS-TRANSFER", table_name, origin, _gift_data}, _state) do
-    {:noreply, %{origin: origin, table_name: table_name}}
+  def handle_info({:"ETS-TRANSFER", table_name, _origin, _gift_data}, _state) do
+    {:noreply, %{table_name: table_name}}
   end
 
   def handle_call(:restore, _from, nil), do: {:reply, nil, nil}
-  def handle_call(:restore, _from, %{origin: origin, table_name: table_name}) do
-    :ets.give_away(table_name, origin, nil)
+  def handle_call(:restore, {pid, _ref}, %{table_name: table_name}) do
+    :ets.give_away(table_name, pid, nil)
     {:reply, table_name, nil}
   end
 
