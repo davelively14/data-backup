@@ -1,11 +1,11 @@
 defmodule DataBackup.ServerTest do
   use ExUnit.Case
-  alias DataBackup.{Backup, Server}
+  alias DataBackup.{DataMaster, Server}
 
   @ets_name :data
 
   describe "start_link/1" do
-    setup :start_backup_server
+    setup :start_data_master
 
     test "starts correctly" do
       assert :erlang.whereis(Server) == :undefined
@@ -14,20 +14,10 @@ defmodule DataBackup.ServerTest do
       assert is_pid(pid)
     end
 
-    test "ets table initialized" do
-      {:ok, server_pid} = Server.start_link()
-
-      assert info = :ets.info(@ets_name)
-      assert Keyword.get(info, :owner) == server_pid
-    end
-
-    test "pulls :ets table ownership from backup server if exists" do
-      :ets.new(:data, [:set, :private, :named_table])
-      assert Keyword.get(:ets.info(:data), :owner) == self()
-      :ets.give_away(:data, :erlang.whereis(Backup), nil)
-      assert Keyword.get(:ets.info(:data), :owner) == :erlang.whereis(Backup)
+    test "assumes ownership of the ets table" do
+      assert :ets.info(@ets_name)[:owner] == :erlang.whereis(DataMaster)
       Server.start_link()
-      assert Keyword.get(:ets.info(:data), :owner) == :erlang.whereis(Server)
+      assert :ets.info(@ets_name)[:owner] == :erlang.whereis(Server)
     end
   end
 
@@ -59,14 +49,14 @@ defmodule DataBackup.ServerTest do
   # Setup Functions #
   ###################
 
-  def start_backup_server(_context) do
-    Backup.start_link()
+  def start_data_master(_context) do
+    DataMaster.start_link()
 
     {:ok, %{}}
   end
 
   def start_all_servers(_context) do
-    Backup.start_link()
+    DataMaster.start_link()
     Server.start_link()
 
     {:ok, %{}}

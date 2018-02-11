@@ -1,8 +1,6 @@
 defmodule DataBackup.Server do
   use GenServer
 
-  @ets_name :data
-
   #######
   # API #
   #######
@@ -24,10 +22,7 @@ defmodule DataBackup.Server do
   #############
 
   def init(_) do
-    unless DataBackup.Backup.restore do
-      :ets.new(@ets_name, [:set, :protected, :named_table])
-    end
-    {:ok, %{ets: @ets_name}}
+    {:ok, %{ets: DataBackup.DataMaster.get_ets}}
   end
 
   def handle_call({:insert_data, id, data}, _from, state) do
