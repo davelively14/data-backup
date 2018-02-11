@@ -15,7 +15,8 @@ defmodule DataBackup.Supervisor do
 
   def init(_) do
     children = [
-      
+      worker(DataBackup.DataMaster, []),
+      worker(DataBackup.Server, [])
     ]
 
     opts = [

@@ -13,6 +13,6 @@ defmodule DataBackup do
 
   """
   def start do
-    nil
+    DataBackup.Supervisor.start_link()
   end
 end
