@@ -26,7 +26,7 @@ defmodule DataBackup.Server do
   #############
 
   def init(_) do
-    {:ok, %{ets: DataBackup.DataMaster.get_ets}}
+    {:ok, %{ets: DataBackup.DataMaster.get_ets()}}
   end
 
   def handle_call({:insert_data, id, data}, _from, state) do
